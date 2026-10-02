@@ -1,6 +1,6 @@
 "use server";
 
-import { initializeApp, getApps, getApp } from "firebase-admin/app";
+import { initializeApp, getApps, getApp, cert } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { getDatabase } from "firebase-admin/database";
@@ -17,7 +17,7 @@ export function initializeFirebaseAdmin() {
   // Check if Firebase Admin has already been initialized
   if (getApps().length === 0) {
     const app = initializeApp({
-      credential: getApps().length === 0 ? admin.credential.cert(serviceAccount) : undefined,
+      credential: getApps().length === 0 ? cert(serviceAccount) : undefined,
     });
     return {
       app,
