@@ -1,24 +1,36 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages using official actions
 
-# Grant write permission to the GITHUB_TOKEN so the action can push the gh-pages branch
+# The workflow needs permission to create the Pages deployment
 permissions:
-  contents: write
+  pages: write          # for actions/deploy-pages
+  id-token: write       # optional, used by some deploy actions for OIDC
 
 on:
   push:
     branches:
       - main
+  # Allow manual trigger from the Actions tab
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      # 1️⃣ Check out the repository so we have access to all source files
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      # 2️⃣ Upload the site files as an artifact for the deploy step
+      - name: Upload static site artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
-          keep_files: false
+          # Publish the entire repository (index.html, css, js, etc.)
+          path: ./
+
+      # 3️⃣ Deploy the artifact to GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+        with:
+          # The token is automatically provided; we explicitly reference it for clarity
+          token: ${{ secrets.GITHUB_TOKEN }}
