@@ -1,0 +1,110 @@
+/* === Common Utilities === */
+
+// Firebase config — replace with your own from Firebase Console
+const FIREBASE_CONFIG = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+// Initialize Firebase
+firebase.initializeApp(FIREBASE_CONFIG);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const rtdb = firebase.database(); // For WebRTC signaling
+
+// --- Auth State ---
+function getCurrentUser() {
+  return auth.currentUser;
+}
+
+function isLoggedIn() {
+  return !!auth.currentUser;
+}
+
+// --- Navigation ---
+function navigateTo(page) {
+  window.location.href = page;
+}
+
+function logout() {
+  auth.signOut().then(() => {
+    navigateTo('index.html');
+  }).catch(err => {
+    showMessage('logout-msg', err.message, 'error');
+  });
+}
+
+// --- Auth Guard ---
+function requireAuth() {
+  if (!isLoggedIn()) {
+    navigateTo('login.html');
+    return false;
+  }
+  return true;
+}
+
+// --- UI Helpers ---
+function showMessage(elementId, text, type) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.textContent = text;
+  el.className = 'message message-' + type;
+  el.classList.remove('hidden');
+}
+
+function hideMessage(elementId) {
+  const el = document.getElementById(elementId);
+  if (el) el.classList.add('hidden');
+}
+
+function showLoading(buttonId) {
+  const btn = document.getElementById(buttonId);
+  if (!btn) return;
+  btn.disabled = true;
+  btn.dataset.originalText = btn.textContent;
+  btn.innerHTML = '<span class="spinner"></span>Loading...';
+}
+
+function hideLoading(buttonId) {
+  const btn = document.getElementById(buttonId);
+  if (!btn) return;
+  btn.disabled = false;
+  btn.textContent = btn.dataset.originalText || 'Submit';
+}
+
+// --- Generate 6-digit room code ---
+function generateRoomCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+// --- Update navbar based on auth state ---
+function updateNavbar() {
+  const userDiv = document.getElementById('user-info');
+  const loginLink = document.getElementById('nav-login');
+  const logoutLink = document.getElementById('nav-logout');
+  const dashboardLink = document.getElementById('nav-dashboard');
+
+  if (isLoggedIn()) {
+    const user = auth.currentUser;
+    if (userDiv) userDiv.textContent = user.email || 'User';
+    if (loginLink) loginLink.classList.add('hidden');
+    if (logoutLink) logoutLink.classList.remove('hidden');
+    if (dashboardLink) dashboardLink.classList.remove('hidden');
+  } else {
+    if (userDiv) userDiv.textContent = '';
+    if (loginLink) loginLink.classList.remove('hidden');
+    if (logoutLink) logoutLink.classList.add('hidden');
+    if (dashboardLink) dashboardLink.classList.add('hidden');
+  }
+}
+
+// --- Initialize page ---
+function initPage() {
+  updateNavbar();
+}
+
+document.addEventListener('DOMContentLoaded', initPage);
