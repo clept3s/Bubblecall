@@ -1,5 +1,9 @@
 name: Deploy to GitHub Pages
 
+# Grant write permission to the GITHUB_TOKEN so the action can push the gh-pages branch
+permissions:
+  contents: write
+
 on:
   push:
     branches:
