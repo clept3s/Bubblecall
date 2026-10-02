@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Bubblecall</title>
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="logo">Bubblecall</a>
+    <ul class="nav-links">
+      <li><a href="login.html" id="nav-login">Login</a></li>
+      <li><a href="register.html" id="nav-register">Register</a></li>
+      <li><a href="dashboard.html" id="nav-dashboard">Dashboard</a></li>
+      <li><a href="#" id="nav-logout" class="hidden" onclick="logout(); return false;">Logout</a></li>
+      <li><span id="user-info" class="user-info"></span></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="card">
+      <h2>Welcome to Bubblecall</h2>
+      <p class="subtitle">Start or join a P2P video call in seconds.</p>
+    </div>
+
+    <div class="dashboard-actions">
+      <a href="host.html" class="action-card">
+        <h3>📹 Host a Call</h3>
+        <p>Create a new room and share the 6-digit code.</p>
+      </a>
+      <a href="join.html" class="action-card">
+        <h3>🔗 Join a Call</h3>
+        <p>Enter a room code and your username to join.</p>
+      </a>
+      <a href="settings.html" class="action-card">
+        <h3>⚙️ Settings</h3>
+        <p>Manage your profile, password, and preferences.</p>
+      </a>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      requireAuth();
+    });
+  </script>
+</body>
+</html>

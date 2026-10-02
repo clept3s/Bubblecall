@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Host a Call - Bubblecall</title>
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/call.css" />
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="logo">Bubblecall</a>
+    <ul class="nav-links">
+      <li><a href="login.html" id="nav-login">Login</a></li>
+      <li><a href="register.html" id="nav-register">Register</a></li>
+      <li><a href="dashboard.html" id="nav-dashboard">Dashboard</a></li>
+      <li><a href="#" id="nav-logout" class="hidden" onclick="logout(); return false;">Logout</a></li>
+      <li><span id="user-info" class="user-info"></span></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="card">
+      <h2>Host a Call</h2>
+      <div id="host-msg" class="message hidden"></div>
+
+      <div id="host-setup">
+        <div class="form-group">
+          <label for="host-name">Your Name (max 20 characters)</label>
+          <input type="text" id="host-name" maxlength="20" placeholder="Enter your name" />
+        </div>
+        <button id="host-create-btn" class="btn btn-primary btn-block" onclick="handleHostCreate()">
+          Create Room
+        </button>
+      </div>
+
+      <div id="host-active" class="hidden">
+        <p>Your room code:</p>
+        <div class="room-code-display" id="host-active-code"></div>
+        <p class="text-center" style="color: var(--text-muted);">
+          Share this code with participants. You are the host — your browser relays the connection.
+        </p>
+        <div class="mt-2 text-center">
+          <a id="host-call-link" href="#" class="btn btn-primary">
+            Start Call
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/rooms.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      requireAuth();
+    });
+  </script>
+  <script>
+    async function handleHostCreate() {
+      hideMessage('host-msg');
+      const name = document.getElementById('host-name').value.trim() || 'Host';
+      const btn = document.getElementById('host-create-btn');
+      btn.disabled = true;
+      btn.textContent = 'Creating...';
+
+      const code = await createRoom(name);
+      if (code) {
+        document.getElementById('host-setup').classList.add('hidden');
+        document.getElementById('host-active').classList.remove('hidden');
+        document.getElementById('host-active-code').textContent = code;
+        // Update the link
+        const linkEl = document.getElementById('host-call-link');
+        if (linkEl) {
+          linkEl.href = 'call.html?role=host&code=' + code;
+        }
+      }
+      btn.disabled = false;
+      btn.textContent = 'Create Room';
+    }
+  </script>
+</body>
+</html>

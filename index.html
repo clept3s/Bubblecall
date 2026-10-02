@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bubblecall - Zoom-Like P2P Video Calls</title>
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="logo">Bubblecall</a>
+    <ul class="nav-links">
+      <li><a href="login.html" id="nav-login">Login</a></li>
+      <li><a href="register.html" id="nav-register">Register</a></li>
+      <li><a href="dashboard.html" id="nav-dashboard" class="hidden">Dashboard</a></li>
+      <li><a href="#" id="nav-logout" class="hidden" onclick="logout(); return false;">Logout</a></li>
+      <li><span id="user-info" class="user-info"></span></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="card text-center">
+      <h1>Bubblecall</h1>
+      <p class="subtitle">Zoom-like P2P video calls — no middleman, no subscriptions.</p>
+      <div class="mt-2">
+        <a href="register.html" class="btn btn-primary">Get Started</a>
+        <a href="login.html" class="btn btn-secondary ml-1">Login</a>
+      </div>
+      <div class="mt-2">
+        <a href="join.html" class="btn btn-secondary">Join a Call (No Account)</a>
+      </div>
+      <p class="mt-2" style="color: var(--text-muted); font-size: 0.9rem;">
+        Create an account to host calls, or join with just a 6-digit code — no account needed.
+      </p>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="js/common.js"></script>
+</body>
+</html>

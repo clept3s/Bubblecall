@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Call - Bubblecall</title>
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/call.css" />
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="logo">Bubblecall</a>
+    <ul class="nav-links">
+      <li><a href="login.html" id="nav-login">Login</a></li>
+      <li><a href="register.html" id="nav-register">Register</a></li>
+      <li><a href="dashboard.html" id="nav-dashboard">Dashboard</a></li>
+      <li><a href="#" id="nav-logout" class="hidden" onclick="logout(); return false;">Logout</a></li>
+      <li><span id="user-info" class="user-info"></span></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div id="call-msg" class="message hidden"></div>
+
+    <div class="call-container">
+      <!-- Video Grid -->
+      <div class="video-grid">
+        <!-- Local video -->
+        <div class="video-player">
+          <video id="local-video" autoplay muted playsinline></video>
+          <span class="label" id="local-label">You</span>
+        </div>
+        <!-- Remote video -->
+        <div class="video-player">
+          <video id="remote-video" autoplay playsinline></video>
+          <span class="label" id="remote-label">Participant</span>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="call-sidebar">
+        <h3>Room: <span id="room-code-display"></span></h3>
+        <ul class="participant-list" id="participant-list">
+          <!-- Populated dynamically -->
+        </ul>
+      </div>
+    </div>
+
+    <!-- Call Controls -->
+    <div class="call-controls">
+      <button id="mute-btn" class="btn btn-secondary" onclick="toggleMute()" title="Mute/Unmute">🎤</button>
+      <button id="video-btn" class="btn btn-secondary" onclick="toggleVideo()" title="Video On/Off">📹</button>
+      <button class="btn btn-danger" onclick="endCall()" title="End Call">📞</button>
+    </div>
+
+    <!-- Host Setup (shown before starting) -->
+    <div id="host-setup" class="card hidden">
+      <h2>You are the Host</h2>
+      <p>Room code: <strong id="host-code"></strong></p>
+      <div class="form-group mt-2">
+        <label for="host-name">Your Name</label>
+        <input type="text" id="host-name" maxlength="20" placeholder="Enter your name" />
+      </div>
+      <button id="host-start-btn" class="btn btn-primary btn-block mt-2" onclick="startCallAsHost(document.getElementById('host-code').textContent)">
+        Start Call
+      </button>
+    </div>
+
+    <!-- Join Setup (shown before starting) -->
+    <div id="join-setup" class="card hidden">
+      <h2>You are a Participant</h2>
+      <p>Room code: <strong id="join-code"></strong></p>
+      <div class="form-group mt-2">
+        <label for="join-name">Your Name</label>
+        <input type="text" id="join-name" maxlength="20" placeholder="Enter your name" />
+      </div>
+      <button id="join-start-btn" class="btn btn-primary btn-block mt-2" onclick="startCallAsJoiner(document.getElementById('join-code').textContent, document.getElementById('join-name').value)">
+        Join Call
+      </button>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/webrtc.js"></script>
+  <script src="js/call.js"></script>
+  <script>
+    // Initialize call page on load
+    document.addEventListener('DOMContentLoaded', () => {
+      initCallPage();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+/* === Auth Pages (Login / Register) === */
+.auth-container {
+  max-width: 400px;
+  margin: 3rem auto;
+}
+
+.auth-container .card {
+  text-align: center;
+}
+
+.auth-container h1 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.auth-container .subtitle {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.auth-switch {
+  margin-top: 1.5rem;
+  color: var(--text-muted);
+}
+
+.auth-switch a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.auth-switch a:hover { text-decoration: underline; }

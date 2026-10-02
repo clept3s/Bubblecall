@@ -1,0 +1,39 @@
+/* === Dashboard === */
+.dashboard-greeting {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.action-card {
+  background: var(--surface);
+  border: 1px solid #334155;
+  border-radius: var(--radius);
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.1s;
+  text-decoration: none;
+  color: var(--text);
+  display: block;
+}
+
+.action-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.action-card h3 {
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+.action-card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}

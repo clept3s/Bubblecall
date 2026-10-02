@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings - Bubblecall</title>
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/settings.css" />
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="logo">Bubblecall</a>
+    <ul class="nav-links">
+      <li><a href="login.html" id="nav-login">Login</a></li>
+      <li><a href="register.html" id="nav-register">Register</a></li>
+      <li><a href="dashboard.html" id="nav-dashboard">Dashboard</a></li>
+      <li><a href="#" id="nav-logout" class="hidden" onclick="logout(); return false;">Logout</a></li>
+      <li><span id="user-info" class="user-info"></span></li>
+    </ul>
+  </nav>
+
+  <main>
+    <h2>Settings</h2>
+    <div id="settings-msg" class="message hidden"></div>
+
+    <div class="settings-sections">
+      <!-- Profile Section -->
+      <div class="settings-section" id="section-profile">
+        <h3>👤 Profile</h3>
+        <div class="form-group">
+          <label for="settings-name">Display Name</label>
+          <input type="text" id="settings-name" maxlength="20" placeholder="Your display name" />
+        </div>
+        <div class="form-group">
+          <label for="settings-email">Email</label>
+          <input type="email" id="settings-email" disabled />
+        </div>
+        <button id="settings-save-name-btn" class="btn btn-primary" onclick="updateDisplayName()">
+          Save Name
+        </button>
+      </div>
+
+      <!-- Password Section -->
+      <div class="settings-section" id="section-password">
+        <h3>🔒 Change Password</h3>
+        <div class="form-group">
+          <label for="settings-current-password">Current Password</label>
+          <input type="password" id="settings-current-password" autocomplete="current-password" />
+        </div>
+        <div class="form-group">
+          <label for="settings-new-password">New Password</label>
+          <input type="password" id="settings-new-password" minlength="6" autocomplete="new-password" />
+        </div>
+        <div class="form-group">
+          <label for="settings-confirm-password">Confirm New Password</label>
+          <input type="password" id="settings-confirm-password" autocomplete="new-password" />
+        </div>
+        <button id="settings-change-password-btn" class="btn btn-primary" onclick="changePassword()">
+          Change Password
+        </button>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="settings-section" id="section-danger">
+        <h3>⚠️ Danger Zone</h3>
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">
+          Permanently delete your account and all associated data.
+        </p>
+        <button class="btn btn-danger" onclick="deleteAccount()">Delete Account</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/settings.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initSettingsPage();
+      requireAuth();
+    });
+  </script>
+</body>
+</html>

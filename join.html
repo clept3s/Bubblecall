@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join a Call - Bubblecall</title>
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/call.css" />
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="logo">Bubblecall</a>
+    <ul class="nav-links">
+      <li><a href="login.html" id="nav-login">Login</a></li>
+      <li><a href="register.html" id="nav-register">Register</a></li>
+      <li><a href="dashboard.html" id="nav-dashboard">Dashboard</a></li>
+      <li><a href="#" id="nav-logout" class="hidden" onclick="logout(); return false;">Logout</a></li>
+      <li><span id="user-info" class="user-info"></span></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="card join-form">
+      <h2>Join a Call</h2>
+      <p class="subtitle">No account needed — just enter the code.</p>
+      <div id="join-msg" class="message hidden"></div>
+
+      <!-- Step 1: Enter room code -->
+      <div id="join-step1">
+        <div class="form-group">
+          <label for="join-code">6-Digit Room Code</label>
+          <input type="text" id="join-code" maxlength="6" placeholder="e.g. 123456" />
+        </div>
+        <button id="join-verify-btn" class="btn btn-primary btn-block" onclick="verifyRoomCode()">
+          Verify Code
+        </button>
+      </div>
+
+      <!-- Step 2: Enter name and join -->
+      <div id="join-step2" class="hidden">
+        <p>Room code: <strong id="join-verified-code"></strong></p>
+        <div class="form-group mt-2">
+          <label for="join-name">Your Name (max 20 characters)</label>
+          <input type="text" id="join-name" maxlength="20" placeholder="Enter your name" />
+        </div>
+        <button id="join-btn" class="btn btn-primary btn-block" onclick="handleJoin()">
+          Join Call
+        </button>
+        <button class="btn btn-secondary btn-block mt-1" onclick="backToStep1()">
+          ← Change Code
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/rooms.js"></script>
+  <script>
+    // Step 1: Verify the room code exists and is active
+    async function verifyRoomCode() {
+      hideMessage('join-msg');
+      const code = document.getElementById('join-code').value.trim();
+      const btn = document.getElementById('join-verify-btn');
+      btn.disabled = true;
+      btn.textContent = 'Checking...';
+
+      const room = await getRoom(code);
+      if (!room) {
+        showMessage('join-msg', 'Room not found.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Verify Code';
+        return;
+      }
+
+      if (room.status === 'ended') {
+        showMessage('join-msg', 'This call has ended.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Verify Code';
+        return;
+      }
+
+      // Code is valid — show step 2
+      document.getElementById('join-step1').classList.add('hidden');
+      document.getElementById('join-step2').classList.remove('hidden');
+      document.getElementById('join-verified-code').textContent = code;
+      btn.disabled = false;
+      btn.textContent = 'Verify Code';
+    }
+
+    // Step 2: Join the room
+    async function handleJoin() {
+      hideMessage('join-msg');
+      const code = document.getElementById('join-verified-code').textContent;
+      const name = document.getElementById('join-name').value.trim();
+      const btn = document.getElementById('join-btn');
+      btn.disabled = true;
+      btn.textContent = 'Joining...';
+
+      const result = await joinRoom(code, name);
+      if (result) {
+        window.location.href = 'call.html?role=join&code=' + code + '&name=' + encodeURIComponent(name);
+      }
+      btn.disabled = false;
+      btn.textContent = 'Join Call';
+    }
+
+    function backToStep1() {
+      document.getElementById('join-step2').classList.add('hidden');
+      document.getElementById('join-step1').classList.remove('hidden');
+      document.getElementById('join-code').value = '';
+      hideMessage('join-msg');
+    }
+  </script>
+</body>
+</html>
