@@ -2,12 +2,12 @@
 
 // Firebase config — replace with your own from Firebase Console
 const FIREBASE_CONFIG = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDD49nlENFPmd0ngm4YqFc1Q1KmsuiKgpY",                    // Retrieve this from your Web App settings
+  authDomain: "bubblecall-94fb4.firebaseapp.com",
+  projectId: "bubblecall-94fb4",
+  storageBucket: "bubblecall-94fb4.appspot.com",
+  messagingSenderId: "319291188245",         // This is your Firebase Project Number
+  appId: "1:319291188245:web:cc156edfea8b3675651a1c"                       // Retrieve this from your Web App settings
 };
 
 // Initialize Firebase

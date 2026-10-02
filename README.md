@@ -71,12 +71,10 @@ const FIREBASE_CONFIG = {
 };
 ```
 
-### 4. Deploy to GitHub Pages
+### 4. Deploy to GitHub Pages (automated)
 
-1. Push this repo to GitHub
-2. Go to **Settings → Pages** in your repo
-3. Source: **Deploy from a branch** → Branch: `main` → Folder: `/ (root)`
-4. Save — your site will be at `https://<username>.github.io/<repo>/`
+1. Push this repo to GitHub. The included GitHub Actions workflow (`.github/workflows/gh-pages.yml`) will automatically build (no build step needed) and deploy the site to the `gh-pages` branch on every push to `main`.
+2. In your GitHub repository go to **Settings → Pages** and set the source to **Deploy from a branch → gh-pages**. The workflow will keep this branch up‑to‑date.
 
 ## How It Works
 
