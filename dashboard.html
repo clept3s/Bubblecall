@@ -47,8 +47,16 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script src="js/common.js"></script>
   <script>
+    // Guard the dashboard: wait for Firebase Auth to finish restoring the session
     document.addEventListener('DOMContentLoaded', () => {
-      requireAuth();
+      const unsubscribe = auth.onAuthStateChanged(user => {
+        if (!user) {
+          // Not logged in → send back to login page
+          navigateTo('login.html');
+        }
+        // Once we have a result we can stop listening
+        unsubscribe();
+      });
     });
   </script>
 </body>
