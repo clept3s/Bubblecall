@@ -24,7 +24,13 @@
 
     <div class="call-container">
       <!-- Video Grid -->
-      <div id="video-grid" class="video-grid"></div>
+    <div id="video-grid" class="video-grid">
+      <!-- Local video element (muted to avoid echo) -->
+      <div class="video-player">
+        <video id="local-video" autoplay muted playsinline></video>
+        <span class="label">You</span>
+      </div>
+    </div>
 
       <!-- Sidebar -->
       <div class="call-sidebar">
