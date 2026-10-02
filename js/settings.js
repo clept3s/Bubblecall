@@ -92,11 +92,14 @@ function deleteAccount() {
 
 // --- Initialize settings page ---
 function initSettingsPage() {
-  if (!requireAuth()) return;
-
-  const user = auth.currentUser;
-  if (user) {
+  // The global auth listener in common.js already handles redirection for
+  // unauthenticated users, so we just initialise the UI when a user is
+  // available. Using `auth.onAuthStateChanged` guarantees the user object is
+  // ready even during the initial page load.
+  const unsubscribe = auth.onAuthStateChanged(user => {
+    if (!user) return; // If not logged in the global listener will have sent us to login.
     document.getElementById('settings-name').value = user.displayName || '';
     document.getElementById('settings-email').value = user.email || '';
-  }
+    unsubscribe(); // stop listening after we have the data we need
+  });
 }
