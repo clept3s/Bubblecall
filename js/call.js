@@ -55,13 +55,15 @@ async function startCallAsJoiner(code, name) {
       peerConnection.addTrack(track, localStream);
     });
 
-    // Setup signaling — this peer answers offers
-    setupSignalingListener(code, null, handleAnswer, handleIceCandidate);
+    // Setup signaling — joiner needs to receive the host's offer and then answer
+    setupSignalingListener(code, handleOffer, null, handleIceCandidate);
 
     // Update UI
     document.getElementById('room-code-display').textContent = code;
     document.getElementById('call-ui').classList.remove('hidden');
     document.getElementById('join-setup').classList.add('hidden');
+    // Start listening for participants so the UI stays up‑to‑date
+    listenParticipants(code);
 
   } catch (err) {
     showMessage('call-msg', 'Could not access camera/microphone: ' + err.message, 'error');

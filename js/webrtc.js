@@ -6,12 +6,17 @@ const PEER_CONFIG = {
     { urls: 'stun:stun1.l.google.com:19302' }
   ]
 };
-
-let localStream = null;
-let peerConnection = null;
-let isHost = false;
-let roomCode = null;
-let username = null;
+10 | // Use `var` (or attach to `window`) so the variables are shared across the
+11 | // separate script files (`webrtc.js` and `call.js`). In a plain HTML page
+12 | // each <script> tag runs in its own module scope, so `let` would not be
+13 | // accessible from `call.js`. Making them global allows the call logic to
+14 | // reference the same stream, peer connection and signaling reference.
+15 | var localStream = null;
+16 | var peerConnection = null;
+17 | var isHost = false;
+18 | var roomCode = null;
+19 | var username = null;
+20 | var signalingRef = null;
 let signalingRef = null;
 
 // --- Get local media stream ---
