@@ -108,3 +108,35 @@ function initPage() {
 }
 
 document.addEventListener('DOMContentLoaded', initPage);
+
+/**
+ * Global auth listener that centralises navigation logic.
+ * This prevents the “login ↔ dashboard” bounce that occurs when each page
+ * individually checks `auth.currentUser` before Firebase finishes restoring
+ * the saved session.
+ */
+auth.onAuthStateChanged(user => {
+  const path = window.location.pathname.toLowerCase();
+  const isAuthPage = path.endsWith('login.html') || path.endsWith('register.html');
+  const isProtected =
+    path.endsWith('dashboard.html') ||
+    path.endsWith('host.html') ||
+    path.endsWith('call.html') ||
+    path.endsWith('settings.html');
+
+  if (user) {
+    // User is signed in
+    if (isAuthPage) {
+      // If they are on login or register, send them to the dashboard
+      navigateTo('dashboard.html');
+    }
+    // No action needed for protected pages – they stay where they are
+  } else {
+    // No user signed in
+    if (isProtected) {
+      // Guard protected pages – send to login
+      navigateTo('login.html');
+    }
+    // Auth pages are fine to stay on
+  }
+});

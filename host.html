@@ -56,17 +56,6 @@
   <script src="js/common.js"></script>
   <script src="js/rooms.js"></script>
   <script>
-    // Guard the host page: ensure the user is still authenticated before allowing room creation
-    document.addEventListener('DOMContentLoaded', () => {
-      const unsubscribe = auth.onAuthStateChanged(user => {
-        if (!user) {
-          navigateTo('login.html');
-        }
-        unsubscribe();
-      });
-    });
-  </script>
-  <script>
     async function handleHostCreate() {
       hideMessage('host-msg');
       const name = document.getElementById('host-name').value.trim() || 'Host';
