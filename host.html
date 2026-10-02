@@ -29,6 +29,10 @@
           <label for="host-name">Your Name (max 20 characters)</label>
           <input type="text" id="host-name" maxlength="20" placeholder="Enter your name" />
         </div>
+        <div class="form-group">
+          <label for="host-capacity">Max Capacity (optional, default 4)</label>
+          <input type="number" id="host-capacity" min="2" max="20" placeholder="e.g. 6" />
+        </div>
         <button id="host-create-btn" class="btn btn-primary btn-block" onclick="handleHostCreate()">
           Create Room
         </button>
@@ -59,19 +63,21 @@
     async function handleHostCreate() {
       hideMessage('host-msg');
       const name = document.getElementById('host-name').value.trim() || 'Host';
+      const capacityInput = document.getElementById('host-capacity');
+      const maxCapacity = parseInt(capacityInput.value, 10) || 4;
       const btn = document.getElementById('host-create-btn');
       btn.disabled = true;
       btn.textContent = 'Creating...';
 
-      const code = await createRoom(name);
+      const code = await createRoom(name, maxCapacity);
       if (code) {
         document.getElementById('host-setup').classList.add('hidden');
         document.getElementById('host-active').classList.remove('hidden');
         document.getElementById('host-active-code').textContent = code;
-        // Update the link
+        // Update the link (pass capacity in query to be aware on call side)
         const linkEl = document.getElementById('host-call-link');
         if (linkEl) {
-          linkEl.href = 'call.html?role=host&code=' + code;
+          linkEl.href = `call.html?role=host&code=${code}&capacity=${maxCapacity}`;
         }
       }
       btn.disabled = false;

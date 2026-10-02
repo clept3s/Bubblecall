@@ -122,6 +122,28 @@ function endCall() {
   navigateTo('dashboard.html');
 }
 
+// --- Participant UI helpers ---
+function updateParticipantList(participants) {
+  const listEl = document.getElementById('participant-list');
+  if (!listEl) return;
+  listEl.innerHTML = '';
+  participants.forEach(p => {
+    const li = document.createElement('li');
+    li.textContent = p;
+    listEl.appendChild(li);
+  });
+}
+
+// Listen to Firestore for changes in the participants array and reflect them in UI.
+function listenParticipants(code) {
+  const roomRef = db.collection('rooms').doc(code);
+  return roomRef.onSnapshot(doc => {
+    const data = doc.data() || {};
+    const participants = data.participants || [];
+    updateParticipantList(participants);
+  });
+}
+
 // --- Mute/Unmute ---
 function toggleMute() {
   if (!localStream) return;

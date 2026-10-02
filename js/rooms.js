@@ -1,7 +1,7 @@
 /* === Room Management === */
 
 // --- Create a new room ---
-function createRoom(username) {
+function createRoom(username, maxCapacity = 4) {
   const code = generateRoomCode();
   const user = auth.currentUser;
 
@@ -15,23 +15,23 @@ function createRoom(username) {
   return roomRef.get().then((doc) => {
     // Ensure code is unique
     if (doc.exists) {
-      return createRoom(username); // Retry with new code
+      return createRoom(username, maxCapacity); // retry with new code
     }
 
     return roomRef.set({
       code: code,
       hostId: user.uid,
       hostName: username,
+      maxCapacity: maxCapacity,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       status: 'waiting', // waiting, active, ended
       participants: firebase.firestore.FieldValue.arrayUnion(username)
     });
-  }).then(() => {
-    return code;
-  }).catch((err) => {
-    showMessage('host-msg', 'Failed to create room: ' + err.message, 'error');
-    return null;
-  });
+  }).then(() => code)
+    .catch((err) => {
+      showMessage('host-msg', 'Failed to create room: ' + err.message, 'error');
+      return null;
+    });
 }
 
 // --- Join a room by code ---
@@ -60,12 +60,31 @@ function joinRoom(code, username) {
       return null;
     }
 
-    // Add participant
-    return roomRef.update({
-      participants: firebase.firestore.FieldValue.arrayUnion(username),
-      status: 'active'
+    // Enforce max capacity before adding participant
+    const maxCap = room.maxCapacity || 4;
+    const currentCount = (room.participants || []).length;
+    if (currentCount >= maxCap) {
+      showMessage('join-msg', `Room is full (max ${maxCap} participants).`, 'error');
+      return null;
+    }
+
+    // Add participant safely using a transaction to avoid race conditions
+    return db.runTransaction(async (t) => {
+      const freshSnap = await t.get(roomRef);
+      const freshData = freshSnap.data() || {};
+      const participants = freshData.participants || [];
+      if (participants.length >= maxCap) {
+        throw new Error('Room reached max capacity');
+      }
+      t.update(roomRef, {
+        participants: firebase.firestore.FieldValue.arrayUnion(username),
+        status: 'active'
+      });
     }).then(() => {
       return { code, hostId: room.hostId, hostName: room.hostName };
+    }).catch(err => {
+      showMessage('join-msg', err.message, 'error');
+      return null;
     });
   }).catch((err) => {
     showMessage('join-msg', 'Failed to join room: ' + err.message, 'error');

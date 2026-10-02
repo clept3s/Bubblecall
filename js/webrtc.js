@@ -39,12 +39,33 @@ function createPeerConnection(isHostRole, code, user) {
     });
   }
 
-  // Handle remote stream
+  // Handle remote streams – create a video element for each unique sender.
+  // `event.streams[0]` contains the MediaStream from the remote peer.
+  // We use the `username` (the remote peer's identifier) to give the video a
+  // deterministic id so we don't duplicate elements when ICE renegotiates.
   peerConnection.ontrack = (event) => {
-    const remoteVideo = document.getElementById('remote-video');
-    if (remoteVideo) {
-      remoteVideo.srcObject = event.streams[0];
+    // The signalling data includes the remote username; we keep it in the
+    // global `username` variable for the peer that sent the current SDP.
+    const remoteUsername = username || 'remote';
+    const videoId = `remote-video-${remoteUsername}`;
+    let videoEl = document.getElementById(videoId);
+    if (!videoEl) {
+      // Create a wrapper that mimics the original `.video-player` markup
+      const wrapper = document.createElement('div');
+      wrapper.className = 'video-player';
+      videoEl = document.createElement('video');
+      videoEl.id = videoId;
+      videoEl.autoplay = true;
+      videoEl.playsInline = true;
+      wrapper.appendChild(videoEl);
+      const label = document.createElement('span');
+      label.className = 'label';
+      label.textContent = remoteUsername;
+      wrapper.appendChild(label);
+      const grid = document.getElementById('video-grid');
+      if (grid) grid.appendChild(wrapper);
     }
+    videoEl.srcObject = event.streams[0];
   };
 
   // ICE candidates
